@@ -1,0 +1,3 @@
+rootProject.name = 'webdevReactNativeA4'
+
+include ':app'
