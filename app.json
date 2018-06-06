@@ -1,4 +1,5 @@
 {
-  "name": "webdevReactNativeA4",
-  "displayName": "webdevReactNativeA4"
+  "expo": {
+    "sdkVersion": "27.0.0"
+  }
 }
