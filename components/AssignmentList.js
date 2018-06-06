@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {Button, Divider, ListItem} from 'react-native-elements'
+import {Button, Card, Divider, ListItem} from 'react-native-elements'
 
 export default class AssignmentList
     extends React.Component {
@@ -52,11 +52,18 @@ export default class AssignmentList
                 </View>
                 <View style={{paddingHorizontal: 8, paddingVertical: 10}}>
                     <Divider style={{backgroundColor: 'grey'}} containerStyle={{marginTop: 5}}/>
-                    {
-                        this.state.assignments.map((agn, index) => (
-                            <ListItem key={index} title={agn.title}
-                            />))
-                    }
+                    <Card containerStyle={{padding: 0}}>
+                        {
+                            this.state.assignments.map((agn, index) => (
+                                <ListItem key={index} title={agn.title}
+                                          onPress={()=>
+                                              this.props.navigation.navigate('AssignmentPreview',
+                                                  {
+                                                      topicId: this.state.topicId,
+                                                      assignment: this.state.assignments[index]
+                                                  })}/>))
+                        }
+                    </Card>
                 </View>
 
             </View>

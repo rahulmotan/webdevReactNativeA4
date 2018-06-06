@@ -21,6 +21,7 @@ import AssignmentList from './components/AssignmentList'
 import ExamList from './components/ExamList'
 import ExamEditor from './components/ExamEditor'
 import AssignmentWidget from './components/AssignmentWidget'
+import AssignmentPreview from './components/AssignmentPreview'
 
 class Home extends React.Component {
     static navigationOptions = {
@@ -102,6 +103,7 @@ const App = createStackNavigator({
     QuestionList,
     AssignmentList,
     AssignmentWidget,
+    AssignmentPreview,
     ExamList,
     ExamEditor,
     TrueFalseQuestionEditor,
