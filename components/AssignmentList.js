@@ -1,23 +1,37 @@
 import React from 'react'
 import {View} from 'react-native'
-import {Divider, Text, Button} from 'react-native-elements'
+import {Button, Divider, ListItem} from 'react-native-elements'
 
 export default class AssignmentList
     extends React.Component {
     static navigationOptions = {title: 'Assignments'};
+    findAllAssignmentsForTopic = (topicId) => {
+        return fetch('https://summester-webdev.herokuapp.com/api/topic/' + topicId + '/assignment')
+            .then(response => response.json())
+            .then(agn => this.setState({assignments: agn}))
+    };
 
     constructor(props) {
         super(props);
         this.state = {
             assignments: [],
             topicId: 1
-        }
+        };
+        this.findAllAssignmentsForTopic = this.findAllAssignmentsForTopic.bind(this);
     }
 
     componentDidMount() {
         const {navigation} = this.props;
         const topicId = navigation.getParam("topicId");
         this.setState({topicId});
+        this.findAllAssignmentsForTopic(topicId);
+    }
+
+    componentWillReceiveProps(newProps) {
+        const {navigation} = this.props;
+        const topicId = navigation.getParam("topicId");
+        this.setState({topicId});
+        this.findAllAssignmentsForTopic(topicId);
     }
 
     render() {
@@ -32,15 +46,17 @@ export default class AssignmentList
                         borderWidth: 0,
                         borderRadius: 5,
                     }}
-                            onPress={() => this.props.navigation.navigate('AssignmentEditor', {topicId: this.state.topicId})}
+                            onPress={() => this.props.navigation.navigate('AssignmentWidget', {topicId: this.state.topicId})}
                             title='Create Assignment'
                             containerStyle={{marginTop: 20}}/>
                 </View>
                 <View style={{paddingHorizontal: 8, paddingVertical: 10}}>
                     <Divider style={{backgroundColor: 'grey'}} containerStyle={{marginTop: 5}}/>
-                    <Text h4>Assignment List Will Appear Here.
-                        {this.state.topicId}
-                    </Text>
+                    {
+                        this.state.assignments.map((agn, index) => (
+                            <ListItem key={index} title={agn.title}
+                            />))
+                    }
                 </View>
 
             </View>
