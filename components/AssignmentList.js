@@ -1,5 +1,5 @@
 import React from 'react'
-import {View} from 'react-native'
+import {ScrollView, View} from 'react-native'
 import {Button, Card, Divider, ListItem} from 'react-native-elements'
 
 export default class AssignmentList
@@ -36,7 +36,7 @@ export default class AssignmentList
 
     render() {
         return (
-            <View style={{paddingTop: 5}}>
+            <ScrollView style={{paddingTop: 5}}>
                 <View style={{paddingLeft: 8, paddingVertical: 10}}>
                     <Button buttonStyle={{
                         backgroundColor: "rgba(92, 99,216, 1)",
@@ -66,7 +66,7 @@ export default class AssignmentList
                     </Card>
                 </View>
 
-            </View>
+            </ScrollView>
         )
     }
 }
