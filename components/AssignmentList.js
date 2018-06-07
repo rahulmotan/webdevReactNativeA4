@@ -65,7 +65,6 @@ export default class AssignmentList
                         }
                     </Card>
                 </View>
-
             </ScrollView>
         )
     }

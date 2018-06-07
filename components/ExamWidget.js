@@ -1,6 +1,6 @@
 import React from 'react'
 import {Alert, Picker, ScrollView, TextInput, View} from 'react-native'
-import {Button, Card, FormLabel, Text} from 'react-native-elements'
+import {Button, Card, FormLabel, ListItem} from 'react-native-elements'
 
 export default class ExamWidget
     extends React.Component {
@@ -11,40 +11,38 @@ export default class ExamWidget
     addQuestion = () => {
         const value = this.state.pickerValue;
         const eid = this.state.eid;
-        Alert.alert('pv: ' + value + ' eid: ' + eid);
+
         switch (value) {
             case "0": {
                 this.props.navigation.navigate('QuestionWidget',
-                    {value: value, eid: eid, topicId: this.state.topicId});
+                    {value: value, eid: eid, topicId: this.state.topicId, exam: this.state.exam});
             }
             case "1": {
                 this.props.navigation.navigate('QuestionWidget',
-                    {value: value, eid: eid, topicId: this.state.topicId});
+                    {value: value, eid: eid, topicId: this.state.topicId, exam: this.state.exam});
                 break;
             }
             case "2": {
                 this.props.navigation.navigate('QuestionWidget',
-                    {value: value, eid: eid, topicId: this.state.topicId});
+                    {value: value, eid: eid, topicId: this.state.topicId, exam: this.state.exam});
                 break;
             }
             case "3": {
                 this.props.navigation.navigate('QuestionWidget',
-                    {value: value, eid: eid, topicId: this.state.topicId});
+                    {value: value, eid: eid, topicId: this.state.topicId, exam: this.state.exam});
                 break;
             }
             default:
                 Alert.alert('Invalid Choice of Question Type. ' +
                     'Please restart application.');
         }
-
-        return fetch('https://summester-webdev.herokuapp.com/api/exam/' + eid + '/mcq');
     };
     updateExam = () => {
         return fetch('https://summester-webdev.herokuapp.com/api/exam/' + this.state.eid + '/update', {
             method: 'PUT',
             body: JSON.stringify({
                 name: this.state.name,
-
+                description: this.state.description,
             }),
             headers: {
                 'Content-Type': 'application/json'
@@ -59,6 +57,11 @@ export default class ExamWidget
                 this.setState({exam})
             ))
     };
+    findAllQuestionsForTopic = (examId) => {
+        return fetch('https://summester-webdev.herokuapp.com/api/exam/' + examId + '/baseExamQuestions')
+            .then(response => (response.json()))
+            .then(questions => (this.setState({questions})))
+    };
 
     constructor(props) {
         super(props);
@@ -71,11 +74,18 @@ export default class ExamWidget
             description: '',
             points: '',
             eid: 1,
-            pickerValue: '0'
+            pickerValue: '0',
+            questionTypes: ['View All',
+                'Multiple \nChoice',
+                'Fill in the \nblanks',
+                'Essay',
+                'True or\nfalse'],
+            selectedQuestionTypeIndex: 0
         };
         this.updatePickerValue = this.updatePickerValue.bind(this);
         this.addQuestion = this.addQuestion.bind(this);
         this.updateExam = this.updateExam.bind(this);
+        this.findAllQuestionsForTopic = this.findAllQuestionsForTopic.bind(this);
     }
 
     componentDidMount() {
@@ -86,6 +96,18 @@ export default class ExamWidget
         this.setState({eid});
         this.setState({topicId});
         this.setState({exam});
+        this.findAllQuestionsForTopic(eid);
+    }
+
+    componentWillReceiveProps(newProps) {
+        const {navigation} = this.props;
+        const topicId = this.props.navigation.getParam('topicId');
+        const eid = this.props.navigation.getParam('eid');
+        const exam = this.props.navigation.getParam('exam');
+        this.setState({eid});
+        this.setState({topicId});
+        this.setState({exam});
+        this.findAllQuestionsForTopic(eid);
     }
 
     render() {
@@ -103,12 +125,6 @@ export default class ExamWidget
                         <TextInput onChangeText={(description) => this.setState({description})}
                                    value={this.state.description}
                                    placeholder={this.state.exam.description}/>
-                    </View>
-                    <View style={{padding: 10}}>
-                        <FormLabel>Exam Points:</FormLabel>
-                        <TextInput onChangeText={(points) => this.setState({points})}
-                                   value={this.state.points}
-                                   placeholder={this.state.exam.points}/>
                     </View>
                     <View style={{padding: 10}}>
                         <Button buttonStyle={{
@@ -153,12 +169,22 @@ export default class ExamWidget
                                     color: 'white'
                                 }}
                         />
-                        <Text h4>{this.state.pickerValue}</Text>
                     </View>
                 </Card>
-                <Card>
 
+                <Card title={'Questions'}>
+                    {this.state.questions.map((question, i) => (
+                        <ListItem key={i} title={question.title} subtitle={'click to edit'}
+                                  onPress={() => this.props.navigation.navigate('QuestionPreview', {
+                                      question: question,
+                                      eid: this.state.eid,
+                                      topicId: this.state.topicId,
+                                      exam: this.state.exam
+                                  })}/>
+                    ))}
                 </Card>
+                <View style={{padding: 10}}>
+                </View>
             </ScrollView>
         )
     }

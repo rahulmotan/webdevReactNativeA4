@@ -1,6 +1,6 @@
 import React from 'react'
 import {Alert, View} from 'react-native'
-import {Button, Card, Divider, ListItem, Text} from 'react-native-elements'
+import {Button, Card, Divider, ListItem} from 'react-native-elements'
 
 export default class ExamList
     extends React.Component {
@@ -82,9 +82,6 @@ export default class ExamList
                             ))
                         }
                     </Card>
-                    <Text h4>
-                        {this.state.topicId}
-                    </Text>
                 </View>
             </View>
         )
