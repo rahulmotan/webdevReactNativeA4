@@ -15,7 +15,7 @@ export default class QuestionPreview extends React.Component {
                 exam: this.state.exam
             })
         )
-    }
+    };
 
     constructor(props) {
         super(props);
@@ -90,7 +90,8 @@ export default class QuestionPreview extends React.Component {
                                 }
                                 {
                                     this.state.question.type === "fib" &&
-                                    <Text h4>{this.state.question.blanks}</Text>
+                                    <Text h4>{this.state.question.blanks.replace(/\[.*?\]/g, '__')}</Text>
+
                                 }
                                 {
                                     this.state.question.type === "ess" &&
@@ -143,7 +144,7 @@ export default class QuestionPreview extends React.Component {
                                 borderRadius: 5
                             }}
                                     onPress={this.deleteQuestion}
-                                    title={'Delete Exam'}
+                                    title={'Delete Question'}
                                     icon={{
                                         name: 'delete-sweep',
                                         size: 25,

@@ -8,7 +8,6 @@ export default class QuestionWidget extends React.Component {
         const value = this.state.value;
         switch (value) {
             case '0': {
-                Alert.alert('0');
                 return fetch('https://summester-webdev.herokuapp.com/api/exam/' + this.state.eid + '/mcq', {
                     method: 'POST',
                     body: JSON.stringify({
@@ -34,7 +33,6 @@ export default class QuestionWidget extends React.Component {
             }
 
             case '1': {
-                Alert.alert('1');
                 return fetch('https://summester-webdev.herokuapp.com/api/exam/' + this.state.eid + '/fib', {
                     method: 'POST',
                     body: JSON.stringify({
@@ -60,7 +58,6 @@ export default class QuestionWidget extends React.Component {
             }
 
             case '2': {
-                Alert.alert('2');
                 return fetch('https://summester-webdev.herokuapp.com/api/exam/' + this.state.eid + '/ess', {
                     method: 'POST',
                     body: JSON.stringify({
@@ -84,7 +81,6 @@ export default class QuestionWidget extends React.Component {
             }
 
             case '3': {
-                Alert.alert('3');
                 return fetch('https://summester-webdev.herokuapp.com/api/exam/' + this.state.eid + '/tf', {
                     method: 'POST',
                     body: JSON.stringify({
