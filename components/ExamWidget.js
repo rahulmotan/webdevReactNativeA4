@@ -209,15 +209,68 @@ export default class ExamWidget
                 </Card>
 
                 <Card title={'Questions'}>
-                    {this.state.questions.map((question, i) => (
-                        <ListItem key={i} title={question.title} subtitle={'click to edit/preview'}
-                                  onPress={() => this.props.navigation.navigate('QuestionPreview', {
-                                      question: question,
-                                      eid: this.state.eid,
-                                      topicId: this.state.topicId,
-                                      exam: this.state.exam
-                                  })}/>
-                    ))}
+                    {this.state.questions.map((question, i) => {
+                        if (question.type === "mcq") {
+                            return (
+                                <ListItem key={i} title={question.title} subtitle={'click to edit/preview'}
+                                          onPress={() => this.props.navigation.navigate('QuestionPreview', {
+                                              question: question,
+                                              eid: this.state.eid,
+                                              topicId: this.state.topicId,
+                                              exam: this.state.exam
+                                          })}
+                                          leftIcon={{
+                                              name: 'trending-up',
+                                              color: 'black'
+                                          }}/>
+                            )
+                        }
+                        if (question.type === "ess") {
+                            return (
+                                <ListItem key={i} title={question.title} subtitle={'click to edit/preview'}
+                                          onPress={() => this.props.navigation.navigate('QuestionPreview', {
+                                              question: question,
+                                              eid: this.state.eid,
+                                              topicId: this.state.topicId,
+                                              exam: this.state.exam
+                                          })}
+                                          leftIcon={{
+                                              name: 'accessibility',
+                                              color: 'black'
+                                          }}/>
+                            )
+                        }
+                        if (question.type === "fib") {
+                            return (
+                                <ListItem key={i} title={question.title} subtitle={'click to edit/preview'}
+                                          onPress={() => this.props.navigation.navigate('QuestionPreview', {
+                                              question: question,
+                                              eid: this.state.eid,
+                                              topicId: this.state.topicId,
+                                              exam: this.state.exam
+                                          })}
+                                          leftIcon={{
+                                              name: 'code',
+                                              color: 'black'
+                                          }}/>
+                            )
+                        }
+                        if (question.type === "tf") {
+                            return (
+                                <ListItem key={i} title={question.title} subtitle={'click to edit/preview'}
+                                          onPress={() => this.props.navigation.navigate('QuestionPreview', {
+                                              question: question,
+                                              eid: this.state.eid,
+                                              topicId: this.state.topicId,
+                                              exam: this.state.exam
+                                          })}
+                                          leftIcon={{
+                                              name: 'undo',
+                                              color: 'black'
+                                          }}/>
+                            )
+                        }
+                    })}
                 </Card>
                 <View style={{padding: 10}}>
                 </View>
