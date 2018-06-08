@@ -1,9 +1,10 @@
 import React from 'react'
-import {ScrollView, View} from 'react-native'
-import {Button, Card, Text} from 'react-native-elements'
+import {ScrollView, TextInput, View} from 'react-native'
+import {Button, Card, CheckBox, Text} from 'react-native-elements'
 import {RadioButton, RadioGroup} from 'react-native-flexi-radio-button'
 
 export default class QuestionPreview extends React.Component {
+    static navigationOptions = {title:'Preview'};
     constructor(props) {
         super(props);
         this.state = {
@@ -33,13 +34,14 @@ export default class QuestionPreview extends React.Component {
         this.setState({exam});
         this.setState({question});
         if (question.type === "mcq") {
-            if (question.choices !== undefined && question.choices.toString().length > 0) {
-                let choices = question.choices;
+            if (question.options !== undefined && question.options.toString().length > 0) {
+                let choices = question.options;
                 let options = choices.split("\n");
                 this.setState({options});
+            } else {
+                let options = ["No Choices specified. Click on edit button to edit this question."];
+                this.setState({options});
             }
-            let options = ["No Choices specified. Click on edit button to edit this question."];
-            this.setState({options});
         }
     }
 
@@ -49,7 +51,7 @@ export default class QuestionPreview extends React.Component {
                 <View style={{paddingHorizontal: 5}}>
                     <Card style={{height: 400}}>
                         <View style={{flex: 1, flexDirection: 'row'}}>
-                            <View style={{width: 210}}>
+                            <View style={{width: 230}}>
                                 <Text h4>{this.state.question.title}</Text>
                             </View>
                             <View style={{width: 100}}>
@@ -61,67 +63,88 @@ export default class QuestionPreview extends React.Component {
                                 <Text h5>{this.state.question.subtitle}</Text>
                             </View>
                             <View style={{paddingVertical: 2}}>
-                                {this.state.question.type === "mcq" &&
+                                {
+                                    this.state.question.type === "mcq" &&
 
-                                <RadioGroup
-                                    onSelect={(index, value) => this.onSelect(index, value)}
-                                >
-                                    {this.state.options.map((value, i) => (
-                                        <RadioButton key={i} value={i}>
-                                            <Text>{value}</Text>
-                                        </RadioButton>
-                                    ))}
-
-                                </RadioGroup>
+                                    <RadioGroup selectedIndex={this.state.question.correctOption}
+                                                onSelect={(index, value) => this.onSelect(index, value)}>
+                                        {this.state.options.map((value, i) => (
+                                            <RadioButton key={i} value={i}>
+                                                <Text>{value}</Text>
+                                            </RadioButton>
+                                        ))}
+                                    </RadioGroup>
                                 }
-                            </View>
+                                {
+                                    this.state.question.type === "fib" &&
+                                    <Text h4>{this.state.question.blanks}</Text>
+                                }
+                                {
+                                    this.state.question.type === "ess" &&
+                                    <TextInput multiline={true} numberOfLines={5}
+                                               placeholder={'Student will type their answer here'}/>
+                                }
+                                {
+                                    this.state.question.type === "tf" &&
+                                    <CheckBox checked={this.state.question.checkBoxValue} title="The answer is "/>
+                                }
 
-                            <View style={{paddingTop: 20, flex: 1, flexDirection: 'row'}}>
-                                <View style={{width: 150, padding: 1}}>
-                                    <Button buttonStyle={{
-                                        backgroundColor: "red",
-                                        width: 140,
-                                        height: 50,
-                                        borderColor: "transparent",
-                                        borderWidth: 0,
-                                        borderRadius: 5,
-                                    }}
-                                            onPress={() => this.props.navigation.navigate('ExamWidget', {
-                                                topicId: this.state.topicId,
-                                                eid: this.state.eid,
-                                                exam: this.state.exam
-                                            })}
-                                            title='Go Back'
-                                            containerStyle={{marginTop: 20}}
-                                            icon={{
-                                                name: 'arrow-back',
-                                                size: 25
-                                            }}/>
-                                </View>
-                                <View style={{width: 140, padding: 1}}>
-                                    <Button buttonStyle={{
-                                        backgroundColor: "green",
-                                        width: 140,
-                                        height: 50,
-                                        borderColor: "transparent",
-                                        borderWidth: 0,
-                                        borderRadius: 5,
-                                    }}
-                                            onPress={() => this.props.navigation.navigate('ExamWidget', {
-                                                topicId: this.state.topicId,
-                                                eid: this.state.eid,
-                                                exam: this.state.exam
-                                            })}
-                                            title='Edit'
-                                            containerStyle={{marginTop: 20}}
-                                            icon={{
-                                                name: 'edit',
-                                                size: 25
-                                            }}/>
-                                </View>
+                            </View>
+                        </View>
+                        <View style={{paddingTop: 20, flex: 1, flexDirection: 'row'}}>
+                            <View style={{width: 90, padding: 1}}>
+                                <Button buttonStyle={{
+                                    backgroundColor: "red",
+                                    width: 80,
+                                    height: 30,
+                                    borderColor: "transparent",
+                                    borderWidth: 0,
+                                    borderRadius: 60,
+                                }}
+                                        title='Cancel'
+                                        containerStyle={{marginTop: 20}}/>
+                            </View>
+                            <View style={{width: 90, padding: 1}}>
+                                <Button buttonStyle={{
+                                    backgroundColor: "green",
+                                    width: 80,
+                                    height: 30,
+                                    borderColor: "transparent",
+                                    borderWidth: 0,
+                                    borderRadius: 60,
+                                }}
+                                        title='Submit'
+                                        containerStyle={{marginTop: 20}}
+                                />
                             </View>
                         </View>
                     </Card>
+                    <View style={{paddingTop: 20, width: 280, flex: 1, flexDirection: 'row'}}>
+                        <View style={{width: 40}}>
+                        </View>
+                        <View style={{width: 280, padding: 1}}>
+                            <Button buttonStyle={{
+                                backgroundColor: "rgba(92, 99,216, 1)",
+                                width: 280,
+                                height: 70,
+                                borderColor: "transparent",
+                                borderWidth: 0,
+                                borderRadius: 5,
+                            }}
+                                    onPress={() => this.props.navigation.navigate('QuestionUpdate', {
+                                        topicId: this.state.topicId,
+                                        eid: this.state.eid,
+                                        exam: this.state.exam,
+                                        question: this.state.question
+                                    })}
+                                    title='Edit'
+                                    containerStyle={{marginTop: 20}}
+                                    icon={{
+                                        name: 'edit',
+                                        size: 25
+                                    }}/>
+                        </View>
+                    </View>
                 </View>
             </ScrollView>
         )

@@ -1,19 +1,21 @@
 import React from 'react'
 import {Alert, Picker, ScrollView, TextInput, View} from 'react-native'
-import {Button, Card, CheckBox, FormInput, FormLabel, FormValidationMessage} from 'react-native-elements'
+import {Button, Card, CheckBox, FormLabel, FormValidationMessage} from 'react-native-elements'
 
-export default class QuestionWidget extends React.Component {
-    static navigationOptions = {title: "Edit Question"};
-    saveQuestion = () => {
-        const value = this.state.value;
-        switch (value) {
-            case '0': {
-                Alert.alert('0');
-                return fetch('https://summester-webdev.herokuapp.com/api/exam/' + this.state.eid + '/mcq', {
-                    method: 'POST',
+export default class QuestionUpdate extends React.Component {
+    static navigationOptions = {title: 'Update Question'};
+    updatePickerValue = (correctOption) => (
+        this.setState({correctOption})
+    );
+    updateQuestion = () => {
+        const type = this.state.question.type;
+        switch (type) {
+            case "mcq": {
+                return fetch('https://summester-webdev.herokuapp.com/api/question/' + this.state.question.id + '/mcq', {
+                    method: 'PUT',
                     body: JSON.stringify({
                         title: this.state.title,
-                        subtitle: this.state.description,
+                        subtitle: this.state.subtitle,
                         points: this.state.points,
                         options: this.state.choices,
                         correctOption: this.state.correctOption,
@@ -24,7 +26,7 @@ export default class QuestionWidget extends React.Component {
                     }
                 }).then(response => {
                     if (response.ok) {
-                        Alert.alert("Question Added");
+                        Alert.alert("Question Updated");
                     }
                 }).then(this.props.navigation.navigate('ExamWidget', {
                     eid: this.state.eid,
@@ -33,13 +35,12 @@ export default class QuestionWidget extends React.Component {
                 }))
             }
 
-            case '1': {
-                Alert.alert('1');
-                return fetch('https://summester-webdev.herokuapp.com/api/exam/' + this.state.eid + '/fib', {
-                    method: 'POST',
+            case "fib": {
+                return fetch('https://summester-webdev.herokuapp.com/api/question/' + this.state.question.id + '/fib', {
+                    method: 'PUT',
                     body: JSON.stringify({
                         title: this.state.title,
-                        subtitle: this.state.description,
+                        subtitle: this.state.subtitle,
                         points: this.state.points,
                         blanks: this.state.blanks,
                         type: "fib"
@@ -49,7 +50,7 @@ export default class QuestionWidget extends React.Component {
                     }
                 }).then(response => {
                     if (response.ok) {
-                        Alert.alert("Question Added");
+                        Alert.alert("Question Updated");
                         return response.json();
                     }
                 }).then(this.props.navigation.navigate('ExamWidget', {
@@ -59,13 +60,12 @@ export default class QuestionWidget extends React.Component {
                 }))
             }
 
-            case '2': {
-                Alert.alert('2');
-                return fetch('https://summester-webdev.herokuapp.com/api/exam/' + this.state.eid + '/ess', {
-                    method: 'POST',
+            case "ess": {
+                return fetch('https://summester-webdev.herokuapp.com/api/question/' + this.state.question.id + '/ess', {
+                    method: 'PUT',
                     body: JSON.stringify({
                         title: this.state.title,
-                        subtitle: this.state.description,
+                        subtitle: this.state.subtitle,
                         points: this.state.points,
                         type: "ess"
                     }),
@@ -74,7 +74,7 @@ export default class QuestionWidget extends React.Component {
                     }
                 }).then(response => {
                     if (response.ok) {
-                        Alert.alert("Question Added");
+                        Alert.alert("Question Updated");
                     }
                 }).then(this.props.navigation.navigate('ExamWidget', {
                     eid: this.state.eid,
@@ -83,15 +83,14 @@ export default class QuestionWidget extends React.Component {
                 }))
             }
 
-            case '3': {
-                Alert.alert('3');
-                return fetch('https://summester-webdev.herokuapp.com/api/exam/' + this.state.eid + '/tf', {
-                    method: 'POST',
+            case "tf": {
+                return fetch('https://summester-webdev.herokuapp.com/api/question/' + this.state.question.id + '/tf', {
+                    method: 'PUT',
                     body: JSON.stringify({
                         title: this.state.title,
-                        subtitle: this.state.description,
+                        subtitle: this.state.subtitle,
                         points: this.state.points,
-                        isTrue: this.state.isTrue.toString(),
+                        checkBoxValue: this.state.isTrue,
                         type: "tf"
                     }),
                     headers: {
@@ -99,7 +98,7 @@ export default class QuestionWidget extends React.Component {
                     }
                 }).then(response => {
                     if (response.ok) {
-                        Alert.alert("Question Added");
+                        Alert.alert("Question Updated");
                     }
                 }).then(this.props.navigation.navigate('ExamWidget', {
                     eid: this.state.eid,
@@ -108,53 +107,45 @@ export default class QuestionWidget extends React.Component {
                 }))
             }
             default:
-                Alert.alert('Invalid Choice. Please restart');
-
+                Alert.alert('System Error', 'Invalid Choice. Please restart application.');
         }
-    };
-    updatePickerValue = (correctOption) => (
-        this.setState({correctOption})
-    );
-    updateChoices = (choices) => {
-        this.setState({choices: choices});
     };
 
     constructor(props) {
         super(props);
         this.state = {
-            exam: {},
-            value: '0',
             eid: 1,
             topicId: 1,
+            question: {},
+            exam: {},
             title: '',
-            description: '',
+            subtitle: '',
             points: '',
-            choices: 'Enter Choices',
-            options: [],
-            correctOption: '',
+            choices: '',
             blanks: '',
             isTrue: true,
-            question: {}
+            correctOption: ''
         };
-        this.saveQuestion = this.saveQuestion.bind(this);
-        this.updatePickerValue = this.updatePickerValue.bind(this);
-        this.updateChoices = this.updateChoices.bind(this);
+        this.updateQuestion = this.updateQuestion.bind(this);
     }
 
     componentDidMount() {
         const {navigation} = this.props;
         const eid = navigation.getParam('eid');
         const topicId = navigation.getParam('topicId');
-        const value = navigation.getParam('value');
         const exam = navigation.getParam('exam');
-        this.setState({eid});
-        this.setState({topicId});
-        this.setState({value});
-        this.setState({exam});
+        const question = navigation.getParam('question');
+        this.setState({eid, topicId, exam, question});
+        this.setState({isTrue: question.checkBoxValue});
+        this.setState({choices: question.options});
+        this.setState({title: question.title});
+        this.setState({subtitle: question.subtitle});
+        this.setState({blanks: question.blanks});
+        this.setState({points: question.points});
+        this.setState({correctOption: question.correctOption});
     }
 
     render() {
-        //const widgetType = ["Multiple Choice Question", "Fill In The Blanks", "Essay", "True or False"];
         let choices = this.state.choices.toString();
         let options = choices.split('\n');
         const pickerValues = options.map((option, i) => {
@@ -162,34 +153,34 @@ export default class QuestionWidget extends React.Component {
                 <Picker.Item key={i} label={option} value={i}/>
             )
         })
-
         return (
             <ScrollView style={{paddingTop: 5, paddingBottom: 50}}>
 
                 <View style={{padding: 10}}>
-                    {this.state.value == '0' &&
+                    {this.state.question.type === "mcq" &&
                     <Card title={'Multiple Choice Question'}>
                         <View style={{padding: 10}}>
                             <FormLabel>Title</FormLabel>
                             <TextInput onChangeText={(title) => this.setState({title})} value={this.state.title}
-                                       placeholder={this.state.question.name}/>
+                                       placeholder={this.state.question.title}/>
                         </View>
                         <View style={{padding: 10}}>
                             <FormLabel>Description</FormLabel>
-                            <FormInput multiline={true} numberOfLines={4}
-                                       onChangeText={(description) => this.setState({description})}
-                                       value={this.state.description}
-                                       placeholder={this.state.question.description}/>
+                            <TextInput multiline={true} numberOfLines={4}
+                                       onChangeText={(subtitle) => this.setState({subtitle})}
+                                       value={this.state.subtitle}
+                                       placeholder={this.state.question.subtitle}/>
                         </View>
                         <View style={{padding: 10}}>
                             <FormLabel>Points</FormLabel>
-                            <TextInput onChangeText={(points) => this.setState({points})} value={this.state.points}
-                                       placeholder={this.state.question.points}/>
+                            <TextInput onChangeText={(points) => this.setState({points})}
+                                       value={String(this.state.points)}
+                                       placeholder={String(this.state.question.points)}/>
                         </View>
                         <View style={{padding: 10}}>
                             <FormLabel>Choices</FormLabel>
-                            <FormInput multiline={true} numberOfLines={8}
-                                       onChangeText={(choices) => this.updateChoices(choices)}
+                            <TextInput multiline={true} numberOfLines={8}
+                                       onChangeText={(choices) => this.setState({choices})}
                                        value={this.state.choices}
                                        placeholder={this.state.question.choices}/>
                         </View>
@@ -202,24 +193,26 @@ export default class QuestionWidget extends React.Component {
                         </View>
                     </Card>}
 
-                    {this.state.value == '1' &&
+                    {this.state.question.type === "fib" &&
                     <Card title={'Fill in the Blanks Question'}>
                         <View style={{padding: 10}}>
                             <FormLabel>Title</FormLabel>
-                            <TextInput onChangeText={(title) => this.setState({title})} value={this.state.title}
-                                       placeholder={this.state.question.name}/>
+                            <TextInput onChangeText={(title) => this.setState({title})}
+                                       value={this.state.title}
+                                       placeholder={this.state.question.title}/>
                         </View>
                         <View style={{padding: 10}}>
                             <FormLabel>Description</FormLabel>
                             <TextInput multiline={true} numberOfLines={4}
-                                       onChangeText={(description) => this.setState({description})}
-                                       value={this.state.description}
-                                       placeholder={this.state.question.description}/>
+                                       onChangeText={(subtitle) => this.setState({subtitle})}
+                                       value={this.state.subtitle}
+                                       placeholder={this.state.question.subtitle}/>
                         </View>
                         <View style={{padding: 10}}>
                             <FormLabel>Points</FormLabel>
-                            <TextInput onChangeText={(points) => this.setState({points})} value={this.state.points}
-                                       placeholder={this.state.question.points}/>
+                            <TextInput onChangeText={(points) => this.setState({points})}
+                                       value={String(this.state.points)}
+                                       placeholder={String(this.state.question.points)}/>
                         </View>
                         <View style={{padding: 10}}>
                             <FormLabel>Variables</FormLabel>
@@ -231,51 +224,53 @@ export default class QuestionWidget extends React.Component {
                         </View>
                     </Card>}
 
-                    {this.state.value == '2' &&
+                    {this.state.question.type === "ess" &&
                     <Card title={'Essay Question'}>
                         <View style={{padding: 10}}>
                             <FormLabel>Title</FormLabel>
                             <TextInput onChangeText={(title) => this.setState({title})} value={this.state.title}
-                                       placeholder={this.state.question.name}/>
+                                       placeholder={this.state.question.title}/>
                         </View>
                         <View style={{padding: 10}}>
                             <FormLabel>Description</FormLabel>
                             <TextInput multiline={true} numberOfLines={4}
-                                       onChangeText={(description) => this.setState({description})}
-                                       value={this.state.description}
-                                       placeholder={this.state.question.description}/>
+                                       onChangeText={(subtitle) => this.setState({subtitle})}
+                                       value={this.state.subtitle}
+                                       placeholder={this.state.question.subtitle}/>
                         </View>
                         <View style={{padding: 10}}>
                             <FormLabel>Points</FormLabel>
-                            <TextInput onChangeText={(points) => this.setState({points})} value={this.state.points}
-                                       placeholder={this.state.question.points}/>
+                            <TextInput onChangeText={(points) => this.setState({points})}
+                                       value={String(this.state.points)}
+                                       placeholder={String(this.state.question.points)}/>
                         </View>
                     </Card>
                     }
                     {
-                        this.state.value == '3' &&
+                        this.state.question.type === "tf" &&
                         <Card title={'True or False Question'}>
                             <View style={{padding: 10}}>
                                 <FormLabel>Title</FormLabel>
                                 <TextInput onChangeText={(title) => this.setState({title})} value={this.state.title}
-                                           placeholder={this.state.question.name}/>
+                                           placeholder={this.state.question.title}/>
                             </View>
                             <View style={{padding: 10}}>
                                 <FormLabel>Description</FormLabel>
                                 <TextInput multiline={true} numberOfLines={4}
-                                           onChangeText={(description) => this.setState({description})}
-                                           value={this.state.description}
-                                           placeholder={this.state.question.description}/>
+                                           onChangeText={(subtitle) => this.setState({subtitle})}
+                                           value={this.state.subtitle}
+                                           placeholder={this.state.question.subtitle}/>
                             </View>
                             <View style={{padding: 10}}>
                                 <FormLabel>Points</FormLabel>
-                                <TextInput onChangeText={(points) => this.setState({points})} value={this.state.points}
-                                           placeholder={this.state.question.points}/>
+                                <TextInput onChangeText={(points) => this.setState({points})}
+                                           value={String(this.state.points)}
+                                           placeholder={String(this.state.question.points)}/>
                             </View>
                             <View>
                                 <CheckBox onPress={() => this.setState({isTrue: !this.state.isTrue})}
                                           checked={this.state.isTrue} title="The answer is "/>
-                                <FormValidationMessage>Note: Check for true.</FormValidationMessage>
+                                <FormValidationMessage>Note: Check for true. </FormValidationMessage>
                             </View>
                         </Card>
                     }
@@ -288,8 +283,8 @@ export default class QuestionWidget extends React.Component {
                             borderWidth: 0,
                             borderRadius: 5
                         }}
-                                onPress={this.saveQuestion}
-                                title={'Add'}
+                                onPress={this.updateQuestion}
+                                title={'Update'}
                                 icon={{
                                     name: 'add',
                                     size: 25,

@@ -3,7 +3,7 @@ import {View, Alert} from 'react-native'
 import {Text, ListItem} from 'react-native-elements'
 
 class QuestionList extends Component {
-  static navigationOptions = {title: 'Questions'}
+  static navigationOptions = {title: 'Questions'};
   constructor(props) {
     super(props)
     this.state = {
@@ -13,7 +13,7 @@ class QuestionList extends Component {
   }
   componentDidMount() {
     const {navigation} = this.props;
-    const examId = navigation.getParam("examId")
+    const examId = navigation.getParam("examId");
     fetch("https://summester-webdev.herokuapp.com/api/exam/"+examId+"/question")
       .then(response => (response.json()))
       .then(questions => this.setState({questions}))
@@ -27,7 +27,7 @@ class QuestionList extends Component {
             onPress={() => {
               if(question.type === "TrueFalse")
                 this.props.navigation
-                  .navigate("TrueFalseQuestionEditor", {questionId: question.id})
+                  .navigate("TrueFalseQuestionEditor", {questionId: question.id});
               if(question.type === "MultipleChoice")
                 this.props.navigation
                   .navigate("MultipleChoiceQuestionEditor", {questionId: question.id})

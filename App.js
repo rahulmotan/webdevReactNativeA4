@@ -24,6 +24,7 @@ import AssignmentWidget from './components/AssignmentWidget'
 import AssignmentPreview from './components/AssignmentPreview'
 import QuestionWidget from './components/QuestionWidget'
 import QuestionPreview from './components/QuestionPreview'
+import QuestionUpdate from './components/QuestionUpdate'
 
 class Home extends React.Component {
     static navigationOptions = {
@@ -106,6 +107,7 @@ const App = createStackNavigator({
     QuestionWidget,
     AssignmentList,
     ExamWidget,
+    QuestionUpdate,
     AssignmentWidget,
     AssignmentPreview,
     ExamList,

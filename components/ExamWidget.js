@@ -33,10 +33,19 @@ export default class ExamWidget
                 break;
             }
             default:
-                Alert.alert('Invalid Choice of Question Type. ' +
+                Alert.alert('System Error', 'Invalid Choice of Question Type. ' +
                     'Please restart application.');
         }
     };
+
+    deleteExam = () => {
+        return fetch('https://summester-webdev.herokuapp.com/api/exam/' + this.state.eid + '/delete', {
+            method: 'DELETE'
+        }).then(
+            this.props.navigation.navigate('ExamList', {topicId: this.state.topicId})
+        )
+    };
+
     updateExam = () => {
         return fetch('https://summester-webdev.herokuapp.com/api/exam/' + this.state.eid + '/update', {
             method: 'PUT',
@@ -85,6 +94,7 @@ export default class ExamWidget
         this.updatePickerValue = this.updatePickerValue.bind(this);
         this.addQuestion = this.addQuestion.bind(this);
         this.updateExam = this.updateExam.bind(this);
+        this.deleteExam = this.deleteExam.bind(this);
         this.findAllQuestionsForTopic = this.findAllQuestionsForTopic.bind(this);
     }
 
@@ -96,6 +106,9 @@ export default class ExamWidget
         this.setState({eid});
         this.setState({topicId});
         this.setState({exam});
+        this.setState({name: exam.name});
+        this.setState({points: exam.points});
+        this.setState({description: exam.description});
         this.findAllQuestionsForTopic(eid);
     }
 
@@ -107,6 +120,9 @@ export default class ExamWidget
         this.setState({eid});
         this.setState({topicId});
         this.setState({exam});
+        this.setState({name: exam.name});
+        this.setState({points: exam.points});
+        this.setState({description: exam.description});
         this.findAllQuestionsForTopic(eid);
     }
 
@@ -126,23 +142,43 @@ export default class ExamWidget
                                    value={this.state.description}
                                    placeholder={this.state.exam.description}/>
                     </View>
-                    <View style={{padding: 10}}>
-                        <Button buttonStyle={{
-                            backgroundColor: "black",
-                            width: 280,
-                            height: 60,
-                            borderColor: "transparent",
-                            borderWidth: 0,
-                            borderRadius: 5
-                        }}
-                                onPress={this.updateExam}
-                                title={'Update exam name'}
-                                icon={{
-                                    name: 'satellite',
-                                    size: 25,
-                                    color: 'white'
-                                }}
-                        />
+                    <View style={{paddingTop: 20, flex: 1, flexDirection: 'row'}}>
+                        <View style={{width: 160, padding: 1}}>
+                            <Button buttonStyle={{
+                                backgroundColor: "black",
+                                width: 140,
+                                height: 60,
+                                borderColor: "transparent",
+                                borderWidth: 0,
+                                borderRadius: 5
+                            }}
+                                    onPress={this.updateExam}
+                                    title={'Update Exam'}
+                                    icon={{
+                                        name: 'satellite',
+                                        size: 25,
+                                        color: 'white'
+                                    }}
+                            />
+                        </View>
+                        <View style={{width: 150, padding: 1}}>
+                            <Button buttonStyle={{
+                                backgroundColor: "black",
+                                width: 140,
+                                height: 60,
+                                borderColor: "transparent",
+                                borderWidth: 0,
+                                borderRadius: 5
+                            }}
+                                    onPress={this.deleteExam}
+                                    title={'Delete Exam'}
+                                    icon={{
+                                        name: 'delete-sweep',
+                                        size: 25,
+                                        color: 'white'
+                                    }}
+                            />
+                        </View>
                     </View>
                     <View style={{padding: 10}}>
                         <Picker selectedValue={this.state.pickerValue} onValueChange={this.updatePickerValue}>
@@ -174,7 +210,7 @@ export default class ExamWidget
 
                 <Card title={'Questions'}>
                     {this.state.questions.map((question, i) => (
-                        <ListItem key={i} title={question.title} subtitle={'click to edit'}
+                        <ListItem key={i} title={question.title} subtitle={'click to edit/preview'}
                                   onPress={() => this.props.navigation.navigate('QuestionPreview', {
                                       question: question,
                                       eid: this.state.eid,
