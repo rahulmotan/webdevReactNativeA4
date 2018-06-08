@@ -1,6 +1,6 @@
 import React from 'react'
-import {Alert, Picker, ScrollView, TextInput, View} from 'react-native'
-import {Button, Card, FormLabel, ListItem} from 'react-native-elements'
+import {Alert, Picker, ScrollView, View} from 'react-native'
+import {Button, Card, FormInput, FormLabel, ListItem} from 'react-native-elements'
 
 export default class ExamWidget
     extends React.Component {
@@ -133,12 +133,12 @@ export default class ExamWidget
                 <Card title={'Exam Editor'}>
                     <View style={{padding: 10}}>
                         <FormLabel>Exam Name:</FormLabel>
-                        <TextInput onChangeText={(name) => this.setState({name})} value={this.state.name}
+                        <FormInput onChangeText={(name) => this.setState({name})} value={this.state.name}
                                    placeholder={this.state.exam.name}/>
                     </View>
                     <View style={{padding: 10}}>
                         <FormLabel>Exam Description:</FormLabel>
-                        <TextInput onChangeText={(description) => this.setState({description})}
+                        <FormInput onChangeText={(description) => this.setState({description})}
                                    value={this.state.description}
                                    placeholder={this.state.exam.description}/>
                     </View>

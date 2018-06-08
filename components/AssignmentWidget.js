@@ -48,11 +48,13 @@ export default class AssignmentWidget
         this.updateDescription = this.updateDescription.bind(this);
         this.createAssignment = this.createAssignment.bind(this);
     }
-    componentDidMount(){
+
+    componentDidMount() {
         const {navigation} = this.props;
         const topicId = navigation.getParam("topicId");
         this.setState({topicId});
     }
+
     componentWillReceiveProps(newProps) {
         this.setState({topicId: newProps.topicId});
     }
@@ -66,8 +68,6 @@ export default class AssignmentWidget
                 <FormValidationMessage>
                     Title is required
                 </FormValidationMessage>
-                <Text>{this.state.title}</Text>
-
                 <FormLabel>Description</FormLabel>
                 <FormInput multiline={true} numberOfLines={2}
                            onChangeText={descr => this.setState({description: descr})}/>
@@ -77,7 +77,7 @@ export default class AssignmentWidget
                 <FormLabel>Points</FormLabel>
                 <FormInput onChangeText={points => this.setState({points: points})}/>
                 <FormValidationMessage>
-                    Points is required
+                    Points are required
                 </FormValidationMessage>
 
                 <Button

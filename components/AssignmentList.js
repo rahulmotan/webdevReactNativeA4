@@ -60,7 +60,8 @@ export default class AssignmentList
                                               this.props.navigation.navigate('AssignmentPreview',
                                                   {
                                                       topicId: this.state.topicId,
-                                                      assignment: this.state.assignments[index]
+                                                      assignment: this.state.assignments[index],
+                                                      aid:this.state.assignments[index].id
                                                   })}/>))
                         }
                     </Card>

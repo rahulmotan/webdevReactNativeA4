@@ -4,7 +4,19 @@ import {Button, Card, CheckBox, Text} from 'react-native-elements'
 import {RadioButton, RadioGroup} from 'react-native-flexi-radio-button'
 
 export default class QuestionPreview extends React.Component {
-    static navigationOptions = {title:'Preview'};
+    static navigationOptions = {title: 'Preview'};
+    deleteQuestion = () => {
+        return fetch('https://summester-webdev.herokuapp.com/api/question/' + this.state.question.id, {
+            method: 'DELETE'
+        }).then(
+            this.props.navigation.navigate('ExamWidget', {
+                topicId: this.state.topicId,
+                eid: this.state.eid,
+                exam: this.state.exam
+            })
+        )
+    }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -15,6 +27,7 @@ export default class QuestionPreview extends React.Component {
             options: []
         };
         this.onSelect = this.onSelect.bind(this);
+        this.deleteQuestion = this.deleteQuestion.bind(this);
     }
 
     onSelect(index, value) {
@@ -119,13 +132,29 @@ export default class QuestionPreview extends React.Component {
                             </View>
                         </View>
                     </Card>
-                    <View style={{paddingTop: 20, width: 280, flex: 1, flexDirection: 'row'}}>
-                        <View style={{width: 40}}>
+                    <View style={{paddingTop: 20, flex: 1, flexDirection: 'row'}}>
+                        <View style={{width: 180, padding: 1}}>
+                            <Button buttonStyle={{
+                                backgroundColor: "black",
+                                width: 170,
+                                height: 70,
+                                borderColor: "transparent",
+                                borderWidth: 0,
+                                borderRadius: 5
+                            }}
+                                    onPress={this.deleteQuestion}
+                                    title={'Delete Exam'}
+                                    icon={{
+                                        name: 'delete-sweep',
+                                        size: 25,
+                                        color: 'white'
+                                    }}
+                            />
                         </View>
-                        <View style={{width: 280, padding: 1}}>
+                        <View style={{width: 180, padding: 1}}>
                             <Button buttonStyle={{
                                 backgroundColor: "rgba(92, 99,216, 1)",
-                                width: 280,
+                                width: 170,
                                 height: 70,
                                 borderColor: "transparent",
                                 borderWidth: 0,
