@@ -88,11 +88,26 @@ export default class QuestionPreview extends React.Component {
                                         ))}
                                     </RadioGroup>
                                 }
-                                {
-                                    this.state.question.type === "fib" &&
-                                    <Text h4>{this.state.question.blanks.replace(/\[.*?\]/g, '__')}</Text>
+                                <View style={{flex: 1, flexDirection: 'row'}}>
+                                    {
+                                        this.state.question.type === "fib" &&
 
-                                }
+                                        this.state.question.blanks.replace(/\[.*?\]/g, '__').split(" ")
+                                            .map((word, index) => {
+                                                if (word == '__') {
+                                                    return <View key={index}
+                                                                 style={{borderWidth: 1, height: 30, width: 60}}>
+                                                        <Text> </Text>
+                                                    </View>
+
+                                                } else {
+                                                    return <Text h4 key={index}> {word} </Text>
+                                                }
+                                            })
+
+
+                                    }
+                                </View>
                                 {
                                     this.state.question.type === "ess" &&
                                     <TextInput multiline={true} numberOfLines={5}

@@ -121,7 +121,7 @@ export default class QuestionUpdate extends React.Component {
             title: '',
             subtitle: '',
             points: '',
-            choices: '',
+            choices: 'Enter Choices',
             blanks: '',
             isTrue: true,
             correctOption: ''
@@ -137,7 +137,9 @@ export default class QuestionUpdate extends React.Component {
         const question = navigation.getParam('question');
         this.setState({eid, topicId, exam, question});
         this.setState({isTrue: question.checkBoxValue});
-        this.setState({choices: question.options});
+        if (question.options !== undefined) {
+            this.setState({choices: question.options});
+        }
         this.setState({title: question.title});
         this.setState({subtitle: question.subtitle});
         this.setState({blanks: question.blanks});
@@ -152,7 +154,7 @@ export default class QuestionUpdate extends React.Component {
             return (
                 <Picker.Item key={i} label={option} value={i}/>
             )
-        })
+        });
         return (
             <ScrollView style={{paddingTop: 5, paddingBottom: 50}}>
 
